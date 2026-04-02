@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CarePath Provider Portal</title>
+  <style>
+    :root {
+      --bg: #f3efe7;
+      --panel: #fbf8f2;
+      --panel-2: #e7dfd1;
+      --text: #1f252d;
+      --muted: #5e6773;
+      --line: rgba(31, 37, 45, 0.12);
+      --accent: #5e7f99;
+      --accent-2: #c87e52;
+      --shadow: 0 10px 30px rgba(31, 37, 45, 0.08);
+      --radius: 22px;
+      --radius-sm: 14px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(94,127,153,.18), transparent 18%),
+        radial-gradient(circle at 84% 12%, rgba(200,126,82,.14), transparent 18%),
+        linear-gradient(180deg, #f5f1e8 0%, var(--bg) 100%);
+      color: var(--text);
+    }
+
+    .shell {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, #f8f4ec 0%, #ede5d8 100%);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 240px;
+      height: 240px;
+      right: -70px;
+      top: -80px;
+      background: radial-gradient(circle, rgba(94,127,153,.22), rgba(94,127,153,0));
+    }
+
+    .hero::after {
+      width: 180px;
+      height: 180px;
+      left: -40px;
+      bottom: -60px;
+      background: radial-gradient(circle, rgba(200,126,82,.16), rgba(200,126,82,0));
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.4fr .9fr;
+      gap: 20px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      max-width: 10ch;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 56ch;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .hero-art {
+      min-height: 180px;
+      border-radius: 22px;
+      border: 1px solid rgba(31,37,45,.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.35)),
+        linear-gradient(135deg, rgba(94,127,153,.28), rgba(200,126,82,.12));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shape-house,
+    .shape-orbit,
+    .shape-sun,
+    .shape-path {
+      position: absolute;
+    }
+
+    .shape-house {
+      left: 24px;
+      bottom: 28px;
+      width: 92px;
+      height: 74px;
+      background: #2a3642;
+      clip-path: polygon(50% 0%, 100% 34%, 100% 100%, 0% 100%, 0% 34%);
+    }
+
+    .shape-house::after {
+      content: "";
+      position: absolute;
+      left: 30px;
+      top: 35px;
+      width: 30px;
+      height: 24px;
+      background: rgba(255,255,255,.75);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.03) inset;
+    }
+
+    .shape-orbit {
+      right: 28px;
+      top: 22px;
+      width: 180px;
+      height: 180px;
+      border: 1px solid rgba(94,127,153,.35);
+      border-radius: 999px;
+    }
+
+    .shape-sun {
+      right: 48px;
+      top: 42px;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      background: var(--accent-2);
+      box-shadow: 0 0 0 16px rgba(200,126,82,.08);
+    }
+
+    .shape-path {
+      left: 86px;
+      bottom: 44px;
+      width: 220px;
+      height: 120px;
+      border-bottom: 2px solid rgba(94,127,153,.62);
+      border-right: 2px solid rgba(94,127,153,.62);
+      border-radius: 0 0 140px 0;
+      transform: rotate(-6deg);
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar {
+      padding: 20px;
+      align-self: start;
+      position: sticky;
+      top: 18px;
+    }
+
+    .sidebar h2,
+    .content h2 {
+      margin: 0 0 14px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .meta {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .meta-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 12px 13px;
+      background: linear-gradient(180deg, rgba(255,255,255,.8), rgba(255,255,255,.5));
+    }
+
+    .meta-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .meta-value {
+      font-size: 0.96rem;
+      font-weight: 600;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr .6fr auto;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: end;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field select,
+    .button,
+    .file-label {
+      width: 100%;
+      min-height: 46px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fffdf9;
+      color: var(--text);
+      padding: 0 14px;
+      font: inherit;
+    }
+
+    .button,
+    .file-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .button:hover,
+    .file-label:hover {
+      transform: translateY(-1px);
+      border-color: rgba(94,127,153,.55);
+      background: #ffffff;
+    }
+
+    .button.primary {
+      background: linear-gradient(180deg, #6f8ca3, #5e7f99);
+      color: white;
+      border-color: transparent;
+    }
+
+    .button.primary:hover {
+      background: linear-gradient(180deg, #7896ad, #6887a1);
+    }
+
+    .hidden-file {
+      display: none;
+    }
+
+    .statusbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.7);
+      border-radius: 999px;
+      padding: 8px 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      padding: 14px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(243,239,231,.9), rgba(243,239,231,.65));
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(6px);
+    }
+
+    tbody td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(31,37,45,.08);
+      font-size: 0.96rem;
+    }
+
+    tbody tr:hover {
+      background: rgba(94,127,153,.05);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .empty {
+      padding: 26px 16px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .note {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.76), rgba(231,223,209,.65));
+      border: 1px solid var(--line);
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .panel-grid,
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .hero-art {
+        min-height: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">CarePath Provider Portal</div>
+          <h1>Provider queue, kept minimal.</h1>
+          <p>
+            This portal is designed to show only provider-safe referral information.
+            No names, no internal IDs, no direct PHI. Providers refresh against the latest
+            approved export and work from a controlled queue.
+          </p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="shape-house"></div>
+          <div class="shape-path"></div>
+          <div class="shape-orbit"></div>
+          <div class="shape-sun"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel-grid">
+      <aside class="panel sidebar">
+        <h2>Portal Notes</h2>
+        <p>
+          This is a static provider-facing view intended for manually uploaded,
+          QA-approved export files only.
+        </p>
+
+        <div class="meta">
+          <div class="meta-card">
+            <div class="meta-label">Visible fields</div>
+            <div class="meta-value">Referral ID, External Consumer ID, Town, Requested Service, Total Hours</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Refresh model</div>
+            <div class="meta-value">Manual file load or replace data file and refresh</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Current mode</div>
+            <div class="meta-value" id="modeLabel">Demo / local file preview</div>
+          </div>
+        </div>
+
+        <p>
+          For first deployment, keep this simple: upload the safe CSV, refresh the page,
+          and let providers work from the queue.
+        </p>
+      </aside>
+
+      <main class="panel content">
+        <h2>Pending Provider Queue</h2>
+
+        <div class="toolbar">
+          <div class="field">
+            <label for="searchInput">Search</label>
+            <input id="searchInput" type="text" placeholder="Search by referral, external ID, town, or service" />
+          </div>
+
+          <div class="field">
+            <label for="townFilter">Town filter</label>
+            <select id="townFilter">
+              <option value="">All towns</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="serviceFilter">Service filter</label>
+            <select id="serviceFilter">
+              <option value="">All services</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>&nbsp;</label>
+            <button id="refreshButton" class="button primary" type="button">Refresh Table</button>
+          </div>
+        </div>
+
+        <div class="statusbar">
+          <div class="pill"><span class="dot"></span><span id="statusText">No file loaded yet.</span></div>
+          <div class="pill"><span>Rows:</span><strong id="rowCount">0</strong></div>
+          <label class="file-label" for="csvFileInput">Load Provider CSV</label>
+          <input id="csvFileInput" class="hidden-file" type="file" accept=".csv" />
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Referral ID</th>
+                <th>External Consumer ID</th>
+                <th>Town</th>
+                <th>Requested Service</th>
+                <th>Total Hours</th>
+              </tr>
+            </thead>
+            <tbody id="queueBody">
+              <tr>
+                <td colspan="5" class="empty">Load a provider-safe CSV export to populate the queue.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          Suggested first deployment: keep a published CSV alongside this page and replace it only after QA approval.
+          This page can also be used locally during design by loading a CSV manually with the button above.
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <script>
+    const csvFileInput = document.getElementById('csvFileInput');
+    const queueBody = document.getElementById('queueBody');
+    const searchInput = document.getElementById('searchInput');
+    const townFilter = document.getElementById('townFilter');
+    const serviceFilter = document.getElementById('serviceFilter');
+    const refreshButton = document.getElementById('refreshButton');
+    const statusText = document.getElementById('statusText');
+    const rowCount = document.getElementById('rowCount');
+
+    let rawRows = [];
+    let currentFileName = '';
+
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/).filter(Boolean);
+      if (!lines.length) return [];
+
+      const headers = splitCSVLine(lines[0]);
+      return lines.slice(1).map(line => {
+        const values = splitCSVLine(line);
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = (values[index] || '').trim();
+        });
+        return row;
+      });
+    }
+
+    function splitCSVLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const next = line[i + 1];
+
+        if (char === '"') {
+          if (inQuotes && next === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          result.push(current);
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+
+      result.push(current);
+      return result;
+    }
+
+    function normalize(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function uniqueSortedValues(rows, key) {
+      return [...new Set(rows.map(row => row[key]).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    }
+
+    function populateFilters(rows) {
+      const towns = uniqueSortedValues(rows, 'ResTownName');
+      const services = uniqueSortedValues(rows, 'RequestedService');
+
+      townFilter.innerHTML = '<option value="">All towns</option>';
+      serviceFilter.innerHTML = '<option value="">All services</option>';
+
+      towns.forEach(town => {
+        const option = document.createElement('option');
+        option.value = town;
+        option.textContent = town;
+        townFilter.appendChild(option);
+      });
+
+      services.forEach(service => {
+        const option = document.createElement('option');
+        option.value = service;
+        option.textContent = service;
+        serviceFilter.appendChild(option);
+      });
+    }
+
+    function renderRows() {
+      const searchTerm = normalize(searchInput.value);
+      const selectedTown = townFilter.value;
+      const selectedService = serviceFilter.value;
+
+      const filtered = rawRows.filter(row => {
+        const matchesSearch = !searchTerm ||
+          normalize(row.ReferralID).includes(searchTerm) ||
+          normalize(row.ExternalConsumerID).includes(searchTerm) ||
+          normalize(row.ResTownName).includes(searchTerm) ||
+          normalize(row.RequestedService).includes(searchTerm);
+
+        const matchesTown = !selectedTown || row.ResTownName === selectedTown;
+        const matchesService = !selectedService || row.RequestedService === selectedService;
+
+        return matchesSearch && matchesTown && matchesService;
+      });
+
+      queueBody.innerHTML = '';
+      rowCount.textContent = filtered.length;
+
+      if (!filtered.length) {
+        queueBody.innerHTML = '<tr><td colspan="5" class="empty">No matching provider rows found.</td></tr>';
+        return;
+      }
+
+      filtered.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHTML(row.ReferralID || '')}</td>
+          <td>${escapeHTML(row.ExternalConsumerID || '')}</td>
+          <td>${escapeHTML(row.ResTownName || '')}</td>
+          <td>${escapeHTML(row.RequestedService || '')}</td>
+          <td>${escapeHTML(row.TotalHours || '')}</td>
+        `;
+        queueBody.appendChild(tr);
+      });
+    }
+
+    function escapeHTML(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function loadCSVText(text, sourceLabel) {
+      rawRows = parseCSV(text);
+      currentFileName = sourceLabel || 'provider report';
+      populateFilters(rawRows);
+      renderRows();
+      statusText.textContent = rawRows.length
+        ? `Loaded ${rawRows.length} provider-safe row(s) from ${currentFileName}.`
+        : `Loaded ${currentFileName}, but no rows were found.`;
+    }
+
+    csvFileInput.addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const text = await file.text();
+      loadCSVText(text, file.name);
+    });
+
+    searchInput.addEventListener('input', renderRows);
+    townFilter.addEventListener('change', renderRows);
+    serviceFilter.addEventListener('change', renderRows);
+
+    refreshButton.addEventListener('click', async () => {
+      try {
+        const response = await fetch('provider_report.csv', { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('provider_report.csv not found yet');
+        }
+        const text = await response.text();
+        loadCSVText(text, 'provider_report.csv');
+      } catch (error) {
+        if (rawRows.length) {
+          statusText.textContent = `Showing last loaded data. Auto-refresh file not found.`;
+        } else {
+          statusText.textContent = 'No published provider_report.csv found. Load a CSV manually.';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
