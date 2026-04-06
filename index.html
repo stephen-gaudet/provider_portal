@@ -8,12 +8,14 @@
     :root {
       --bg: #f3efe7;
       --panel: #fbf8f2;
+      --panel-2: #efe7da;
       --text: #1f252d;
       --muted: #5e6773;
       --line: rgba(31, 37, 45, 0.12);
       --accent: #5e7f99;
       --shadow: 0 10px 30px rgba(31, 37, 45, 0.08);
       --radius: 22px;
+      --radius-sm: 16px;
       --max: 1180px;
     }
 
@@ -29,19 +31,36 @@
     .shell {
       max-width: var(--max);
       margin: 0 auto;
-      padding: 20px 20px 40px;
+      padding: 16px 20px 40px;
     }
 
-    .hero-image.hero-image-top {
+    .hero-image-top {
       display: block;
       width: 100%;
-      max-width: 100%;
       height: auto;
-      margin: 0 0 18px 0;
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-      background: transparent;
+      margin: 0 0 8px 0;
+    }
+
+    .intro-card {
+      background: linear-gradient(180deg, #f8f4ec 0%, #efe7da 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      margin-bottom: 16px;
+    }
+
+    .intro-card h2 {
+      margin: 0 0 8px;
+      font-size: 0.98rem;
+      letter-spacing: -0.02em;
+    }
+
+    .intro-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
     }
 
     .content {
@@ -60,7 +79,7 @@
 
     .toolbar {
       display: grid;
-      grid-template-columns: 1.1fr 1.1fr .8fr .6fr auto;
+      grid-template-columns: 1.1fr 1.1fr .8fr .8fr auto;
       gap: 12px;
       margin-bottom: 16px;
       align-items: end;
@@ -186,7 +205,7 @@
       text-transform: uppercase;
       letter-spacing: 0.14em;
       color: var(--muted);
-      padding: 14px 14px;
+      padding: 14px;
       border-bottom: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(243,239,231,.9), rgba(243,239,231,.65));
       position: sticky;
@@ -243,21 +262,23 @@
       .toolbar {
         grid-template-columns: 1fr;
       }
-
-      .hero-image {
-        max-height: 160px;
-      }
     }
   </style>
 </head>
 <body>
   <div class="shell">
-    <section class="hero">
-      <img
-        src="carepath_header.png"
-        alt="CarePath Referral Workflow"
-        class="hero-image"
-      />
+    <img
+      src="carepath_header.png"
+      alt="CarePath Referral Workflow"
+      class="hero-image-top"
+    />
+
+    <section class="intro-card">
+      <h2>Provider Portal Instructions</h2>
+      <p>
+        Welcome to the provider portal. To begin, enter your organization name in the Provider Name field and select Refresh Table.
+        Review the available referrals, make all selections directly in the portal, then choose Export Selected CSV and email the file to [QA email].
+      </p>
     </section>
 
     <main class="content">
